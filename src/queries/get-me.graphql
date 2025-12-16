@@ -1,0 +1,10 @@
+query GetMe {
+  me {
+    id
+    createdAt
+    updatedAt
+    deletedAt
+    lastLogin
+  }
+}
+

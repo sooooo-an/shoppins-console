@@ -1,6 +1,31 @@
-import { Lock, ShoppingBag } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import { Lock, ShoppingBag, Loader2 } from "lucide-react";
+import { useGetCafe24AuthenticationUrlLazyQuery } from "@/apollo/generated/apollo-generated-graphql";
 
 const SignInPage = () => {
+  const [mallId, setMallId] = useState("");
+  const [getAuthUrl, { loading }] = useGetCafe24AuthenticationUrlLazyQuery({
+    onCompleted: (data) => {
+      if (data.cafe24AuthenticationUrl) {
+        window.location.href = data.cafe24AuthenticationUrl;
+      }
+    },
+    onError: (error) => {
+      console.error("인증 URL 가져오기 실패:", error);
+      alert("인증 URL을 가져오는데 실패했습니다. 다시 시도해주세요.");
+    },
+  });
+
+  const handleLogin = () => {
+    if (!mallId.trim()) {
+      alert("Mall ID를 입력해주세요.");
+      return;
+    }
+    getAuthUrl({ variables: { mallId: mallId.trim() } });
+  };
+
   return (
     <div className="min-h-[calc(100vh-73px)] flex items-center justify-center px-6 py-12">
       <div className="max-w-md w-full">
@@ -16,9 +41,39 @@ const SignInPage = () => {
           </div>
 
           <div className="space-y-4">
-            <button className="w-full bg-teal-600 hover:bg-teal-700 disabled:bg-teal-400 text-white py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2">
-              <Lock className="w-5 h-5" />
-              <span>Cafe24로 로그인</span>
+            <div>
+              <label
+                htmlFor="mallId"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Mall ID
+              </label>
+              <input
+                id="mallId"
+                type="text"
+                value={mallId}
+                onChange={(e) => setMallId(e.target.value)}
+                placeholder="mall-id를 입력하세요"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                disabled={loading}
+              />
+            </div>
+            <button
+              onClick={handleLogin}
+              disabled={loading || !mallId.trim()}
+              className="w-full bg-teal-600 hover:bg-teal-700 disabled:bg-teal-400 text-white py-3 px-6 rounded-xl transition-colors flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>로딩 중...</span>
+                </>
+              ) : (
+                <>
+                  <Lock className="w-5 h-5" />
+                  <span>Cafe24로 로그인</span>
+                </>
+              )}
             </button>
 
             <div className="text-center">

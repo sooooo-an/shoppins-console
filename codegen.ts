@@ -2,7 +2,7 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: "https://api.shop-pins.com/graphql",
+  schema: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
   documents: ["src/**/*.{ts,tsx,graphql}"],
   generates: {
     "src/apollo/generated/apollo-generated-graphql.tsx": {

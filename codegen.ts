@@ -2,20 +2,21 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
   overwrite: true,
-  schema: "../api.shoppin.com/src/interface/graphql/schema.gql",
+  schema: "https://api.shop-pins.com/graphql",
   documents: ["src/**/*.{ts,tsx,graphql}"],
   generates: {
-    "src/generated/graphql.ts": {
+    "src/apollo/generated/apollo-generated-graphql.tsx": {
       plugins: [
         "typescript",
         "typescript-operations",
         "typescript-react-apollo",
       ],
-      config: {
-        withHooks: true,
-        withComponent: false,
-        withHOC: false,
-      },
+    },
+    "src/apollo/generated/graphql.schema.json": {
+      plugins: ["introspection"],
+    },
+    "src/apollo/generated/apollo-helpers.ts": {
+      plugins: ["typescript-apollo-client-helpers"],
     },
   },
 };

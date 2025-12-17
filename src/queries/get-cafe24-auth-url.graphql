@@ -1,4 +1,0 @@
-query GetCafe24AuthenticationUrl($mallId: String!) {
-  cafe24AuthenticationUrl(mallId: $mallId)
-}
-

@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           <div>
             <div className="mb-4">
-              <Logo />
+              <Logo size="large" />
             </div>
             <p className="text-teal-100 text-sm">
               카페24 스토어를 위한 스마트한 상품 정보 표시 솔루션

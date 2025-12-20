@@ -1,16 +1,14 @@
+import LandingLayout from "@/layouts/LandingLayout";
 import { MousePointer, ShoppingBag, Sparkles, Zap } from "lucide-react";
 
 const Features = () => {
   return (
-    <section className="py-20 px-6">
+    <LandingLayout
+      badge="Features"
+      title="주요 기능"
+      description="Shoppins으로 고객에게 더 나은 쇼핑 경험을 제공하세요"
+    >
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-teal-700 mb-4">주요 기능</h2>
-          <p className="text-gray-600">
-            Shoppins으로 고객에게 더 나은 쇼핑 경험을 제공하세요
-          </p>
-        </div>
-
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
             <div
@@ -28,7 +26,7 @@ const Features = () => {
           ))}
         </div>
       </div>
-    </section>
+    </LandingLayout>
   );
 };
 

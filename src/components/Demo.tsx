@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Pin, X } from "lucide-react";
 import Image from "next/image";
+import LandingLayout from "@/layouts/LandingLayout";
 
 interface PinData {
   id: number;
@@ -40,15 +41,13 @@ const Demo = () => {
   ]);
   const [activePin, setActivePin] = useState<number | null>(1);
   return (
-    <section className="py-20 px-6 bg-gray-50">
+    <LandingLayout
+      badge="실제 작동 방식"
+      title="핀을 클릭하여 상품 정보를 확인해보세요"
+      description="핀을 클릭하여 상품 정보를 확인해보세요"
+      className="bg-gray-50"
+    >
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-teal-700 mb-4">실제 작동 방식</h2>
-          <p className="text-gray-600">
-            핀을 클릭하여 상품 정보를 확인해보세요
-          </p>
-        </div>
-
         <div className="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-100 max-w-4xl mx-auto">
           <div className="relative aspect-[4/3] bg-teal-50">
             <Image
@@ -183,7 +182,7 @@ const Demo = () => {
           </div>
         </div>
       </div>
-    </section>
+    </LandingLayout>
   );
 };
 

@@ -1,16 +1,15 @@
+import LandingLayout from "@/layouts/LandingLayout";
 import { Sparkles, Check } from "lucide-react";
 
 const Pricing = () => {
   return (
-    <section className="py-20 px-6 bg-gray-50">
+    <LandingLayout
+      badge="요금제"
+      title="비즈니스 규모에 맞는 플랜을 선택하세요"
+      description="비즈니스 규모에 맞는 플랜을 선택하세요"
+      className="bg-gray-50"
+    >
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-teal-700 mb-4">요금제</h2>
-          <p className="text-gray-600">
-            비즈니스 규모에 맞는 플랜을 선택하세요
-          </p>
-        </div>
-
         <div className="grid md:grid-cols-3 gap-8">
           {plans.map((plan, index) => (
             <div
@@ -84,7 +83,7 @@ const Pricing = () => {
           ))}
         </div>
       </div>
-    </section>
+    </LandingLayout>
   );
 };
 

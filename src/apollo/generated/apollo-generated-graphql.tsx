@@ -20,6 +20,83 @@ export type Scalars = {
   Timestamp: { input: any; output: any; }
 };
 
+export type Cafe24Product = {
+  __typename?: 'Cafe24Product';
+  /** 상품 등록일 */
+  createdAt: Scalars['DateTime']['output'];
+  detailImageUrl?: Maybe<Scalars['String']['output']>;
+  /** 진열 여부 */
+  display: Scalars['Boolean']['output'];
+  /** 영문 상품명 */
+  engProductName?: Maybe<Scalars['String']['output']>;
+  listImageUrl?: Maybe<Scalars['String']['output']>;
+  /** 판매가 */
+  price: Scalars['String']['output'];
+  /** 상품 코드 */
+  productCode: Scalars['String']['output'];
+  /** 상품명 */
+  productName: Scalars['String']['output'];
+  /** Cafe24 상품 번호 */
+  productNo: Scalars['ID']['output'];
+  /** 소비자가 */
+  retailPrice?: Maybe<Scalars['String']['output']>;
+  /** 판매 여부 */
+  selling: Scalars['Boolean']['output'];
+  /** 쇼핑몰 번호 */
+  shopNo: Scalars['Float']['output'];
+  smallImageUrl?: Maybe<Scalars['String']['output']>;
+  /** 품절 여부 */
+  soldOut: Scalars['Boolean']['output'];
+  /** 상품 요약 설명 */
+  summaryDescription?: Maybe<Scalars['String']['output']>;
+  tinyImageUrl?: Maybe<Scalars['String']['output']>;
+  /** 상품 수정일 */
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type Cafe24ProductsConnection = {
+  __typename?: 'Cafe24ProductsConnection';
+  edges: Array<Cafe24ProductsConnectionEdge>;
+  pageInfo: ConnectionPageInfo;
+};
+
+export type Cafe24ProductsConnectionEdge = {
+  __typename?: 'Cafe24ProductsConnectionEdge';
+  cursor: Scalars['String']['output'];
+  node: Cafe24Product;
+};
+
+export type Cafe24ProductsConnectionFilterInput = {
+  /** 상품 코드 */
+  productCode?: InputMaybe<Scalars['String']['input']>;
+  /** 상품명 (부분 검색) */
+  productName?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type ConnectionPageInfo = {
+  __typename?: 'ConnectionPageInfo';
+  endCursor: Scalars['String']['output'];
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPreviousPage: Scalars['Boolean']['output'];
+  startCursor: Scalars['String']['output'];
+};
+
+export type CreatePinInput = {
+  color?: InputMaybe<Scalars['String']['input']>;
+  comment?: InputMaybe<Scalars['String']['input']>;
+  connectingImageUrl: Scalars['String']['input'];
+  displayImageUrl?: InputMaybe<Scalars['String']['input']>;
+  linkUrl?: InputMaybe<Scalars['String']['input']>;
+  productNo?: InputMaybe<Scalars['String']['input']>;
+  size?: InputMaybe<Scalars['Int']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<PinType>;
+  /** x 좌표 비율 (0~1) */
+  xRatio: Scalars['Float']['input'];
+  /** y 좌표 비율 (0~1) */
+  yRatio: Scalars['Float']['input'];
+};
+
 export type FilePathInput = {
   /** unique 식별자. */
   id: Scalars['String']['input'];
@@ -70,10 +147,26 @@ export type MetadataInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** 이미지에 핀 생성 */
+  createPin: Pin;
+  /** 핀 삭제 */
+  deletePin: Scalars['Boolean']['output'];
   /** Refresh token을 폐기해 로그아웃 합니다. */
   logout: Scalars['Boolean']['output'];
   /** refresh token을 통해 새로운 access token을 발급합니다. */
   refreshAccessToken: LoginSuccess;
+  /** 핀 수정 */
+  updatePin: Pin;
+};
+
+
+export type MutationCreatePinArgs = {
+  input: CreatePinInput;
+};
+
+
+export type MutationDeletePinArgs = {
+  pinId: Scalars['ID']['input'];
 };
 
 
@@ -86,14 +179,50 @@ export type MutationRefreshAccessTokenArgs = {
   refreshToken: Scalars['String']['input'];
 };
 
+
+export type MutationUpdatePinArgs = {
+  input: UpdatePinInput;
+};
+
+export type Pin = {
+  __typename?: 'Pin';
+  color: Scalars['String']['output'];
+  comment?: Maybe<Scalars['String']['output']>;
+  connectingImageUrl: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  displayImageUrl?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  linkUrl?: Maybe<Scalars['String']['output']>;
+  mallId: Scalars['String']['output'];
+  productNo?: Maybe<Scalars['String']['output']>;
+  size: Scalars['Int']['output'];
+  title?: Maybe<Scalars['String']['output']>;
+  type: PinType;
+  updatedAt: Scalars['DateTime']['output'];
+  xRatio: Scalars['Float']['output'];
+  yRatio: Scalars['Float']['output'];
+};
+
+/** Pin 타입 */
+export enum PinType {
+  /** 기본 핀 타입. */
+  Basic = 'BASIC'
+}
+
 export type Query = {
   __typename?: 'Query';
   /** Cafe24 OAuth 인증을 시작하기 위한 Authorization URL을 반환한다. */
   cafe24AuthenticationUrl: Scalars['String']['output'];
+  /** Cafe24 상품 단건 조회 */
+  cafe24Product?: Maybe<Cafe24Product>;
+  /** Cafe24 상품 목록 (Connection) */
+  cafe24ProductsConnection: Cafe24ProductsConnection;
   /** 파일 업로드를 위한 업로드 URL과 파일 URL을 발급합니다. */
   fileUpload: Upload;
   /** 사용자 */
   me: User;
+  /** 이미지 기준 핀 목록 조회 */
+  pins: Array<Pin>;
 };
 
 
@@ -102,8 +231,40 @@ export type QueryCafe24AuthenticationUrlArgs = {
 };
 
 
+export type QueryCafe24ProductArgs = {
+  productNo: Scalars['Int']['input'];
+};
+
+
+export type QueryCafe24ProductsConnectionArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<Cafe24ProductsConnectionFilterInput>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryFileUploadArgs = {
   data: FileUploadInput;
+};
+
+
+export type QueryPinsArgs = {
+  connectingImageUrl: Scalars['String']['input'];
+};
+
+export type UpdatePinInput = {
+  color?: InputMaybe<Scalars['String']['input']>;
+  comment?: InputMaybe<Scalars['String']['input']>;
+  displayImageUrl?: InputMaybe<Scalars['String']['input']>;
+  linkUrl?: InputMaybe<Scalars['String']['input']>;
+  pinId: Scalars['ID']['input'];
+  size?: InputMaybe<Scalars['Int']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<PinType>;
+  xRatio?: InputMaybe<Scalars['Float']['input']>;
+  yRatio?: InputMaybe<Scalars['Float']['input']>;
 };
 
 /** 파일 업로드 */

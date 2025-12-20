@@ -1,22 +1,43 @@
 "use client";
 
-import { useState } from "react";
-import { Lock, ShoppingBag, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { Lock, ShoppingBag, Loader2, AlertCircle } from "lucide-react";
 import { useGetCafe24AuthenticationUrlLazyQuery } from "@/apollo/generated/apollo-generated-graphql";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const SignInPage = () => {
+  const searchParams = useSearchParams();
   const [mallId, setMallId] = useState("");
-  const [getAuthUrl, { loading }] = useGetCafe24AuthenticationUrlLazyQuery({
-    onCompleted: (data) => {
-      if (data.cafe24AuthenticationUrl) {
-        window.location.href = data.cafe24AuthenticationUrl;
-      }
-    },
-    onError: (error) => {
+  const [getAuthUrl, { loading, data, error }] =
+    useGetCafe24AuthenticationUrlLazyQuery();
+
+  const message = searchParams.get("message");
+  const isInvalidAuth = message === "invalid_auth";
+  const [showInvalidAuth, setShowInvalidAuth] = useState(isInvalidAuth);
+
+  useEffect(() => {
+    if (!isInvalidAuth) return;
+
+    const timer = setTimeout(() => {
+      setShowInvalidAuth(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [isInvalidAuth]);
+
+  useEffect(() => {
+    if (data?.cafe24AuthenticationUrl) {
+      window.location.href = data.cafe24AuthenticationUrl;
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (error) {
       console.error("인증 URL 가져오기 실패:", error);
       alert("인증 URL을 가져오는데 실패했습니다. 다시 시도해주세요.");
-    },
-  });
+    }
+  }, [error]);
 
   const handleLogin = () => {
     if (!mallId.trim()) {
@@ -28,7 +49,18 @@ const SignInPage = () => {
 
   return (
     <div className="min-h-[calc(100vh-73px)] flex items-center justify-center px-6 py-12">
-      <div className="max-w-md w-full">
+      <div className="max-w-md w-full space-y-4">
+        {/* Alert for invalid_auth */}
+        {showInvalidAuth && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>인증 실패</AlertTitle>
+            <AlertDescription>
+              인증에 실패했습니다. 다시 시도해주세요.
+            </AlertDescription>
+          </Alert>
+        )}
+
         <div className="bg-white rounded-3xl shadow-lg p-8 border border-gray-100">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-teal-100 rounded-2xl mb-4">

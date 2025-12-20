@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
 import { Package, Settings, Code, CreditCard } from "lucide-react";
-import { ProductList } from "../components/ProductList";
-import { PinEditor } from "../components/PinEditor";
-import { ScriptInstall } from "../components/ScriptInstall";
-import { PricingConsole } from "../components/PricingConsole";
+import { ProductList } from "../../components/ProductList";
+import { PinEditor } from "../../components/PinEditor";
+import { ScriptInstall } from "../../components/ScriptInstall";
+import { PricingConsole } from "../../components/PricingConsole";
 
 type Tab = "products" | "script" | "pricing";
 

@@ -12,9 +12,9 @@ export default function Cafe24SuccessPage() {
     const hash = window.location.hash.substring(1);
     const params = new URLSearchParams(hash);
 
-    const accessToken = params.get("access_token");
-    const refreshToken = params.get("refresh_token");
-    const expiresAt = params.get("expires_at");
+    const accessToken = params.get("accessToken");
+    const refreshToken = params.get("refreshToken");
+    const expiresAt = params.get("expiresAt");
 
     if (!accessToken || !refreshToken) {
       router.push("/auth/signin?message=invalid_auth");

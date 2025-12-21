@@ -14,10 +14,10 @@ function AuthCallbackClient({ accessToken, expiresAt }: Props) {
 
   login(accessToken, expiresAt ?? undefined)
     .then(() => {
-      router.replace("/console");
+      router.replace("/");
     })
     .catch(() => {
-      router.replace("/signin?message=invalid_auth");
+      router.replace("/auth/signin?message=invalid_auth");
     });
 
   return null;

@@ -1,5 +1,3 @@
-// 5. Refresh API Route (유일한 API Route)
-// app/api/auth/refresh/route.ts
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { graphqlRequest } from "@/lib/apollo-client";

@@ -6,13 +6,15 @@ import { Lock, ShoppingBag, Loader2, AlertCircle } from "lucide-react";
 import { useGetCafe24AuthenticationUrlLazyQuery } from "@/apollo/generated/apollo-generated-graphql";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const Signin = () => {
-  const searchParams = useSearchParams();
+type Props = {
+  message?: string;
+};
+
+const Signin = ({ message }: Props) => {
   const [mallId, setMallId] = useState("");
   const [getAuthUrl, { loading, data, error }] =
     useGetCafe24AuthenticationUrlLazyQuery();
 
-  const message = searchParams.get("message");
   const isInvalidAuth = message === "invalid_auth";
   const [showInvalidAuth, setShowInvalidAuth] = useState(isInvalidAuth);
 

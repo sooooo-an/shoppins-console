@@ -17,7 +17,7 @@ export default function Cafe24SuccessPage() {
     const expiresAt = params.get("expires_at");
 
     if (!accessToken || !refreshToken) {
-      router.push("/signin?message=invalid_auth");
+      router.push("/auth/signin?message=invalid_auth");
       return;
     }
 
@@ -34,10 +34,10 @@ export default function Cafe24SuccessPage() {
 
         await login(accessToken, expiresAt || undefined);
 
-        router.replace("/console");
+        router.replace("/");
       } catch (error) {
         console.error("Auth failed:", error);
-        router.push("/signin?message=auth_failed");
+        router.push("/auth/signin?message=auth_failed");
       }
     };
 

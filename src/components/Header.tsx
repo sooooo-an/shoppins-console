@@ -13,7 +13,7 @@ const Header = () => {
         <nav className="flex items-center gap-4">
           {isAuthenticated ? (
             <>
-              <Link href="/console">콘솔로 바로가기</Link>
+              <Link href="/auth/signin">콘솔로 바로가기</Link>
               <Link
                 href="/auth/signin"
                 className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg transition-colors"
@@ -24,7 +24,7 @@ const Header = () => {
           ) : (
             <>
               <Link href="/products">내 상품</Link>
-              <Link href="/settings">설정</Link>
+              <Link href="/setting">설정</Link>
               <button onClick={logout}>로그아웃</button>
             </>
           )}

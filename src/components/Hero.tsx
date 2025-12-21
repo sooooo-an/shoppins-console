@@ -21,7 +21,7 @@ const Hero = () => {
 
         <div className="flex gap-4 justify-center">
           <Link
-            href="/console"
+            href="/"
             className="bg-pink-400 hover:bg-pink-500 text-white px-8 py-3 rounded-full transition-colors shadow-lg"
           >
             콘솔 시작하기

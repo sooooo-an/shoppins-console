@@ -37,7 +37,7 @@ export default function Cafe24SuccessPage() {
         router.replace("/console");
       } catch (error) {
         console.error("Auth failed:", error);
-        router.push("/login?error=auth_failed");
+        router.push("/signin?message=auth_failed");
       }
     };
 

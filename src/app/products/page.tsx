@@ -6,15 +6,10 @@ import { useGetCafe24ProductsConnectionQuery } from "@/apollo/generated/apollo-g
 import type { Cafe24ProductsConnectionFilterInput } from "@/apollo/generated/apollo-generated-graphql";
 import { NetworkStatus } from "@apollo/client";
 import ProductList from "@/components/ProductList";
-import { PinEditorModal } from "@/components/PinEditorModal";
 
 const ProductsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFilter, setSearchFilter] = useState<SearchFilter>("productName");
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(
-    null
-  );
-  const [isPinEditorOpen, setIsPinEditorOpen] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const filter: Cafe24ProductsConnectionFilterInput | undefined = useMemo(
@@ -84,24 +79,6 @@ const ProductsPage = () => {
 
   const products = data?.cafe24ProductsConnection?.edges || [];
 
-  const selectedProduct = useMemo(() => {
-    if (!selectedProductId) return null;
-    return (
-      products.find((edge) => edge.node.productNo === selectedProductId)
-        ?.node || null
-    );
-  }, [selectedProductId, products]);
-
-  const handleEditProduct = (productNo: string) => {
-    setSelectedProductId(productNo);
-    setIsPinEditorOpen(true);
-  };
-
-  const handleClosePinEditor = () => {
-    setIsPinEditorOpen(false);
-    setSelectedProductId(null);
-  };
-
   return (
     <section className="p-6">
       <section className="mb-6">
@@ -132,10 +109,7 @@ const ProductsPage = () => {
             </div>
 
             <div className="p-6">
-              <ProductList
-                products={products}
-                onEditProduct={handleEditProduct}
-              />
+              <ProductList products={products} />
 
               {/* 인피니티 스크롤 트리거 */}
               {hasNextPage && (
@@ -151,21 +125,6 @@ const ProductsPage = () => {
           </div>
         )}
       </section>
-
-      {/* Pin Editor Modal */}
-      {isPinEditorOpen && selectedProduct && (
-        <PinEditorModal
-          productId={selectedProduct.productNo}
-          productImageUrl={
-            selectedProduct.listImageUrl ||
-            selectedProduct.smallImageUrl ||
-            selectedProduct.tinyImageUrl ||
-            selectedProduct.detailImageUrl ||
-            ""
-          }
-          onClose={handleClosePinEditor}
-        />
-      )}
     </section>
   );
 };

@@ -298,6 +298,78 @@ export type GetCafe24AuthenticationUrlQueryVariables = Exact<{
 
 export type GetCafe24AuthenticationUrlQuery = { __typename?: 'Query', cafe24AuthenticationUrl: string };
 
+export type RefreshAccessTokenMutationVariables = Exact<{
+  refreshToken: Scalars['String']['input'];
+}>;
+
+
+export type RefreshAccessTokenMutation = { __typename?: 'Mutation', refreshAccessToken: { __typename?: 'LoginSuccess', accessToken: string, expiresAt: any, refreshToken: string } };
+
+export type LogoutMutationVariables = Exact<{
+  refreshToken: Scalars['String']['input'];
+}>;
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
+
+export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, createdAt: any, deletedAt?: any | null, lastLogin?: any | null, updatedAt: any } };
+
+export type GetCafe24ProductsConnectionQueryVariables = Exact<{
+  first?: InputMaybe<Scalars['Int']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<Cafe24ProductsConnectionFilterInput>;
+}>;
+
+
+export type GetCafe24ProductsConnectionQuery = { __typename?: 'Query', cafe24ProductsConnection: { __typename?: 'Cafe24ProductsConnection', edges: Array<{ __typename?: 'Cafe24ProductsConnectionEdge', cursor: string, node: { __typename?: 'Cafe24Product', productNo: string, productName: string, productCode: string, price: string, retailPrice?: string | null, display: boolean, selling: boolean, soldOut: boolean, createdAt: any, updatedAt: any, shopNo: number, engProductName?: string | null, summaryDescription?: string | null, detailImageUrl?: string | null, listImageUrl?: string | null, tinyImageUrl?: string | null, smallImageUrl?: string | null } }>, pageInfo: { __typename?: 'ConnectionPageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor: string, endCursor: string } } };
+
+export type GetCafe24ProductQueryVariables = Exact<{
+  productNo: Scalars['Int']['input'];
+}>;
+
+
+export type GetCafe24ProductQuery = { __typename?: 'Query', cafe24Product?: { __typename?: 'Cafe24Product', productNo: string, productName: string, productCode: string, price: string, retailPrice?: string | null, display: boolean, selling: boolean, soldOut: boolean, createdAt: any, updatedAt: any, shopNo: number, engProductName?: string | null, summaryDescription?: string | null, detailImageUrl?: string | null, listImageUrl?: string | null, tinyImageUrl?: string | null, smallImageUrl?: string | null } | null };
+
+export type GetPinsQueryVariables = Exact<{
+  connectingImageUrl: Scalars['String']['input'];
+}>;
+
+
+export type GetPinsQuery = { __typename?: 'Query', pins: Array<{ __typename?: 'Pin', id: string, color: string, comment?: string | null, connectingImageUrl: string, createdAt: any, displayImageUrl?: string | null, linkUrl?: string | null, mallId: string, productNo?: string | null, size: number, title?: string | null, type: PinType, updatedAt: any, xRatio: number, yRatio: number }> };
+
+export type CreatePinMutationVariables = Exact<{
+  input: CreatePinInput;
+}>;
+
+
+export type CreatePinMutation = { __typename?: 'Mutation', createPin: { __typename?: 'Pin', id: string, color: string, comment?: string | null, connectingImageUrl: string, createdAt: any, displayImageUrl?: string | null, linkUrl?: string | null, mallId: string, productNo?: string | null, size: number, title?: string | null, type: PinType, updatedAt: any, xRatio: number, yRatio: number } };
+
+export type UpdatePinMutationVariables = Exact<{
+  input: UpdatePinInput;
+}>;
+
+
+export type UpdatePinMutation = { __typename?: 'Mutation', updatePin: { __typename?: 'Pin', id: string, color: string, comment?: string | null, connectingImageUrl: string, createdAt: any, displayImageUrl?: string | null, linkUrl?: string | null, mallId: string, productNo?: string | null, size: number, title?: string | null, type: PinType, updatedAt: any, xRatio: number, yRatio: number } };
+
+export type DeletePinMutationVariables = Exact<{
+  pinId: Scalars['ID']['input'];
+}>;
+
+
+export type DeletePinMutation = { __typename?: 'Mutation', deletePin: boolean };
+
+export type GetFileUploadQueryVariables = Exact<{
+  data: FileUploadInput;
+}>;
+
+
+export type GetFileUploadQuery = { __typename?: 'Query', fileUpload: { __typename?: 'Upload', uploadUrl: string, fileUrl: string } };
+
 
 export const GetCafe24AuthenticationUrlDocument = gql`
     query GetCafe24AuthenticationUrl($mallId: String!) {
@@ -340,3 +412,480 @@ export type GetCafe24AuthenticationUrlQueryHookResult = ReturnType<typeof useGet
 export type GetCafe24AuthenticationUrlLazyQueryHookResult = ReturnType<typeof useGetCafe24AuthenticationUrlLazyQuery>;
 export type GetCafe24AuthenticationUrlSuspenseQueryHookResult = ReturnType<typeof useGetCafe24AuthenticationUrlSuspenseQuery>;
 export type GetCafe24AuthenticationUrlQueryResult = Apollo.QueryResult<GetCafe24AuthenticationUrlQuery, GetCafe24AuthenticationUrlQueryVariables>;
+export const RefreshAccessTokenDocument = gql`
+    mutation RefreshAccessToken($refreshToken: String!) {
+  refreshAccessToken(refreshToken: $refreshToken) {
+    accessToken
+    expiresAt
+    refreshToken
+  }
+}
+    `;
+export type RefreshAccessTokenMutationFn = Apollo.MutationFunction<RefreshAccessTokenMutation, RefreshAccessTokenMutationVariables>;
+
+/**
+ * __useRefreshAccessTokenMutation__
+ *
+ * To run a mutation, you first call `useRefreshAccessTokenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRefreshAccessTokenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [refreshAccessTokenMutation, { data, loading, error }] = useRefreshAccessTokenMutation({
+ *   variables: {
+ *      refreshToken: // value for 'refreshToken'
+ *   },
+ * });
+ */
+export function useRefreshAccessTokenMutation(baseOptions?: Apollo.MutationHookOptions<RefreshAccessTokenMutation, RefreshAccessTokenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RefreshAccessTokenMutation, RefreshAccessTokenMutationVariables>(RefreshAccessTokenDocument, options);
+      }
+export type RefreshAccessTokenMutationHookResult = ReturnType<typeof useRefreshAccessTokenMutation>;
+export type RefreshAccessTokenMutationResult = Apollo.MutationResult<RefreshAccessTokenMutation>;
+export type RefreshAccessTokenMutationOptions = Apollo.BaseMutationOptions<RefreshAccessTokenMutation, RefreshAccessTokenMutationVariables>;
+export const LogoutDocument = gql`
+    mutation Logout($refreshToken: String!) {
+  logout(refreshToken: $refreshToken)
+}
+    `;
+export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMutationVariables>;
+
+/**
+ * __useLogoutMutation__
+ *
+ * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLogoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
+ *   variables: {
+ *      refreshToken: // value for 'refreshToken'
+ *   },
+ * });
+ */
+export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
+      }
+export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
+export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const GetMeDocument = gql`
+    query GetMe {
+  me {
+    id
+    createdAt
+    deletedAt
+    lastLogin
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetMeQuery__
+ *
+ * To run a query within a React component, call `useGetMeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMeQuery(baseOptions?: Apollo.QueryHookOptions<GetMeQuery, GetMeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMeQuery, GetMeQueryVariables>(GetMeDocument, options);
+      }
+export function useGetMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMeQuery, GetMeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMeQuery, GetMeQueryVariables>(GetMeDocument, options);
+        }
+// @ts-ignore
+export function useGetMeSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetMeQuery, GetMeQueryVariables>): Apollo.UseSuspenseQueryResult<GetMeQuery, GetMeQueryVariables>;
+export function useGetMeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetMeQuery, GetMeQueryVariables>): Apollo.UseSuspenseQueryResult<GetMeQuery | undefined, GetMeQueryVariables>;
+export function useGetMeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetMeQuery, GetMeQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetMeQuery, GetMeQueryVariables>(GetMeDocument, options);
+        }
+export type GetMeQueryHookResult = ReturnType<typeof useGetMeQuery>;
+export type GetMeLazyQueryHookResult = ReturnType<typeof useGetMeLazyQuery>;
+export type GetMeSuspenseQueryHookResult = ReturnType<typeof useGetMeSuspenseQuery>;
+export type GetMeQueryResult = Apollo.QueryResult<GetMeQuery, GetMeQueryVariables>;
+export const GetCafe24ProductsConnectionDocument = gql`
+    query GetCafe24ProductsConnection($first: Int, $after: String, $before: String, $last: Int, $filter: Cafe24ProductsConnectionFilterInput) {
+  cafe24ProductsConnection(
+    first: $first
+    after: $after
+    before: $before
+    last: $last
+    filter: $filter
+  ) {
+    edges {
+      cursor
+      node {
+        productNo
+        productName
+        productCode
+        price
+        retailPrice
+        display
+        selling
+        soldOut
+        createdAt
+        updatedAt
+        shopNo
+        engProductName
+        summaryDescription
+        detailImageUrl
+        listImageUrl
+        tinyImageUrl
+        smallImageUrl
+      }
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCafe24ProductsConnectionQuery__
+ *
+ * To run a query within a React component, call `useGetCafe24ProductsConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCafe24ProductsConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCafe24ProductsConnectionQuery({
+ *   variables: {
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *      before: // value for 'before'
+ *      last: // value for 'last'
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useGetCafe24ProductsConnectionQuery(baseOptions?: Apollo.QueryHookOptions<GetCafe24ProductsConnectionQuery, GetCafe24ProductsConnectionQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCafe24ProductsConnectionQuery, GetCafe24ProductsConnectionQueryVariables>(GetCafe24ProductsConnectionDocument, options);
+      }
+export function useGetCafe24ProductsConnectionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCafe24ProductsConnectionQuery, GetCafe24ProductsConnectionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCafe24ProductsConnectionQuery, GetCafe24ProductsConnectionQueryVariables>(GetCafe24ProductsConnectionDocument, options);
+        }
+// @ts-ignore
+export function useGetCafe24ProductsConnectionSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetCafe24ProductsConnectionQuery, GetCafe24ProductsConnectionQueryVariables>): Apollo.UseSuspenseQueryResult<GetCafe24ProductsConnectionQuery, GetCafe24ProductsConnectionQueryVariables>;
+export function useGetCafe24ProductsConnectionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCafe24ProductsConnectionQuery, GetCafe24ProductsConnectionQueryVariables>): Apollo.UseSuspenseQueryResult<GetCafe24ProductsConnectionQuery | undefined, GetCafe24ProductsConnectionQueryVariables>;
+export function useGetCafe24ProductsConnectionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCafe24ProductsConnectionQuery, GetCafe24ProductsConnectionQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCafe24ProductsConnectionQuery, GetCafe24ProductsConnectionQueryVariables>(GetCafe24ProductsConnectionDocument, options);
+        }
+export type GetCafe24ProductsConnectionQueryHookResult = ReturnType<typeof useGetCafe24ProductsConnectionQuery>;
+export type GetCafe24ProductsConnectionLazyQueryHookResult = ReturnType<typeof useGetCafe24ProductsConnectionLazyQuery>;
+export type GetCafe24ProductsConnectionSuspenseQueryHookResult = ReturnType<typeof useGetCafe24ProductsConnectionSuspenseQuery>;
+export type GetCafe24ProductsConnectionQueryResult = Apollo.QueryResult<GetCafe24ProductsConnectionQuery, GetCafe24ProductsConnectionQueryVariables>;
+export const GetCafe24ProductDocument = gql`
+    query GetCafe24Product($productNo: Int!) {
+  cafe24Product(productNo: $productNo) {
+    productNo
+    productName
+    productCode
+    price
+    retailPrice
+    display
+    selling
+    soldOut
+    createdAt
+    updatedAt
+    shopNo
+    engProductName
+    summaryDescription
+    detailImageUrl
+    listImageUrl
+    tinyImageUrl
+    smallImageUrl
+  }
+}
+    `;
+
+/**
+ * __useGetCafe24ProductQuery__
+ *
+ * To run a query within a React component, call `useGetCafe24ProductQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCafe24ProductQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCafe24ProductQuery({
+ *   variables: {
+ *      productNo: // value for 'productNo'
+ *   },
+ * });
+ */
+export function useGetCafe24ProductQuery(baseOptions: Apollo.QueryHookOptions<GetCafe24ProductQuery, GetCafe24ProductQueryVariables> & ({ variables: GetCafe24ProductQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCafe24ProductQuery, GetCafe24ProductQueryVariables>(GetCafe24ProductDocument, options);
+      }
+export function useGetCafe24ProductLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCafe24ProductQuery, GetCafe24ProductQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCafe24ProductQuery, GetCafe24ProductQueryVariables>(GetCafe24ProductDocument, options);
+        }
+// @ts-ignore
+export function useGetCafe24ProductSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetCafe24ProductQuery, GetCafe24ProductQueryVariables>): Apollo.UseSuspenseQueryResult<GetCafe24ProductQuery, GetCafe24ProductQueryVariables>;
+export function useGetCafe24ProductSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCafe24ProductQuery, GetCafe24ProductQueryVariables>): Apollo.UseSuspenseQueryResult<GetCafe24ProductQuery | undefined, GetCafe24ProductQueryVariables>;
+export function useGetCafe24ProductSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCafe24ProductQuery, GetCafe24ProductQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCafe24ProductQuery, GetCafe24ProductQueryVariables>(GetCafe24ProductDocument, options);
+        }
+export type GetCafe24ProductQueryHookResult = ReturnType<typeof useGetCafe24ProductQuery>;
+export type GetCafe24ProductLazyQueryHookResult = ReturnType<typeof useGetCafe24ProductLazyQuery>;
+export type GetCafe24ProductSuspenseQueryHookResult = ReturnType<typeof useGetCafe24ProductSuspenseQuery>;
+export type GetCafe24ProductQueryResult = Apollo.QueryResult<GetCafe24ProductQuery, GetCafe24ProductQueryVariables>;
+export const GetPinsDocument = gql`
+    query GetPins($connectingImageUrl: String!) {
+  pins(connectingImageUrl: $connectingImageUrl) {
+    id
+    color
+    comment
+    connectingImageUrl
+    createdAt
+    displayImageUrl
+    linkUrl
+    mallId
+    productNo
+    size
+    title
+    type
+    updatedAt
+    xRatio
+    yRatio
+  }
+}
+    `;
+
+/**
+ * __useGetPinsQuery__
+ *
+ * To run a query within a React component, call `useGetPinsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPinsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPinsQuery({
+ *   variables: {
+ *      connectingImageUrl: // value for 'connectingImageUrl'
+ *   },
+ * });
+ */
+export function useGetPinsQuery(baseOptions: Apollo.QueryHookOptions<GetPinsQuery, GetPinsQueryVariables> & ({ variables: GetPinsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetPinsQuery, GetPinsQueryVariables>(GetPinsDocument, options);
+      }
+export function useGetPinsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPinsQuery, GetPinsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetPinsQuery, GetPinsQueryVariables>(GetPinsDocument, options);
+        }
+// @ts-ignore
+export function useGetPinsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetPinsQuery, GetPinsQueryVariables>): Apollo.UseSuspenseQueryResult<GetPinsQuery, GetPinsQueryVariables>;
+export function useGetPinsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetPinsQuery, GetPinsQueryVariables>): Apollo.UseSuspenseQueryResult<GetPinsQuery | undefined, GetPinsQueryVariables>;
+export function useGetPinsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetPinsQuery, GetPinsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetPinsQuery, GetPinsQueryVariables>(GetPinsDocument, options);
+        }
+export type GetPinsQueryHookResult = ReturnType<typeof useGetPinsQuery>;
+export type GetPinsLazyQueryHookResult = ReturnType<typeof useGetPinsLazyQuery>;
+export type GetPinsSuspenseQueryHookResult = ReturnType<typeof useGetPinsSuspenseQuery>;
+export type GetPinsQueryResult = Apollo.QueryResult<GetPinsQuery, GetPinsQueryVariables>;
+export const CreatePinDocument = gql`
+    mutation CreatePin($input: CreatePinInput!) {
+  createPin(input: $input) {
+    id
+    color
+    comment
+    connectingImageUrl
+    createdAt
+    displayImageUrl
+    linkUrl
+    mallId
+    productNo
+    size
+    title
+    type
+    updatedAt
+    xRatio
+    yRatio
+  }
+}
+    `;
+export type CreatePinMutationFn = Apollo.MutationFunction<CreatePinMutation, CreatePinMutationVariables>;
+
+/**
+ * __useCreatePinMutation__
+ *
+ * To run a mutation, you first call `useCreatePinMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePinMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPinMutation, { data, loading, error }] = useCreatePinMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreatePinMutation(baseOptions?: Apollo.MutationHookOptions<CreatePinMutation, CreatePinMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePinMutation, CreatePinMutationVariables>(CreatePinDocument, options);
+      }
+export type CreatePinMutationHookResult = ReturnType<typeof useCreatePinMutation>;
+export type CreatePinMutationResult = Apollo.MutationResult<CreatePinMutation>;
+export type CreatePinMutationOptions = Apollo.BaseMutationOptions<CreatePinMutation, CreatePinMutationVariables>;
+export const UpdatePinDocument = gql`
+    mutation UpdatePin($input: UpdatePinInput!) {
+  updatePin(input: $input) {
+    id
+    color
+    comment
+    connectingImageUrl
+    createdAt
+    displayImageUrl
+    linkUrl
+    mallId
+    productNo
+    size
+    title
+    type
+    updatedAt
+    xRatio
+    yRatio
+  }
+}
+    `;
+export type UpdatePinMutationFn = Apollo.MutationFunction<UpdatePinMutation, UpdatePinMutationVariables>;
+
+/**
+ * __useUpdatePinMutation__
+ *
+ * To run a mutation, you first call `useUpdatePinMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePinMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePinMutation, { data, loading, error }] = useUpdatePinMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdatePinMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePinMutation, UpdatePinMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePinMutation, UpdatePinMutationVariables>(UpdatePinDocument, options);
+      }
+export type UpdatePinMutationHookResult = ReturnType<typeof useUpdatePinMutation>;
+export type UpdatePinMutationResult = Apollo.MutationResult<UpdatePinMutation>;
+export type UpdatePinMutationOptions = Apollo.BaseMutationOptions<UpdatePinMutation, UpdatePinMutationVariables>;
+export const DeletePinDocument = gql`
+    mutation DeletePin($pinId: ID!) {
+  deletePin(pinId: $pinId)
+}
+    `;
+export type DeletePinMutationFn = Apollo.MutationFunction<DeletePinMutation, DeletePinMutationVariables>;
+
+/**
+ * __useDeletePinMutation__
+ *
+ * To run a mutation, you first call `useDeletePinMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePinMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePinMutation, { data, loading, error }] = useDeletePinMutation({
+ *   variables: {
+ *      pinId: // value for 'pinId'
+ *   },
+ * });
+ */
+export function useDeletePinMutation(baseOptions?: Apollo.MutationHookOptions<DeletePinMutation, DeletePinMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeletePinMutation, DeletePinMutationVariables>(DeletePinDocument, options);
+      }
+export type DeletePinMutationHookResult = ReturnType<typeof useDeletePinMutation>;
+export type DeletePinMutationResult = Apollo.MutationResult<DeletePinMutation>;
+export type DeletePinMutationOptions = Apollo.BaseMutationOptions<DeletePinMutation, DeletePinMutationVariables>;
+export const GetFileUploadDocument = gql`
+    query GetFileUpload($data: FileUploadInput!) {
+  fileUpload(data: $data) {
+    uploadUrl
+    fileUrl
+  }
+}
+    `;
+
+/**
+ * __useGetFileUploadQuery__
+ *
+ * To run a query within a React component, call `useGetFileUploadQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFileUploadQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFileUploadQuery({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useGetFileUploadQuery(baseOptions: Apollo.QueryHookOptions<GetFileUploadQuery, GetFileUploadQueryVariables> & ({ variables: GetFileUploadQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetFileUploadQuery, GetFileUploadQueryVariables>(GetFileUploadDocument, options);
+      }
+export function useGetFileUploadLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetFileUploadQuery, GetFileUploadQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetFileUploadQuery, GetFileUploadQueryVariables>(GetFileUploadDocument, options);
+        }
+// @ts-ignore
+export function useGetFileUploadSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetFileUploadQuery, GetFileUploadQueryVariables>): Apollo.UseSuspenseQueryResult<GetFileUploadQuery, GetFileUploadQueryVariables>;
+export function useGetFileUploadSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetFileUploadQuery, GetFileUploadQueryVariables>): Apollo.UseSuspenseQueryResult<GetFileUploadQuery | undefined, GetFileUploadQueryVariables>;
+export function useGetFileUploadSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetFileUploadQuery, GetFileUploadQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetFileUploadQuery, GetFileUploadQueryVariables>(GetFileUploadDocument, options);
+        }
+export type GetFileUploadQueryHookResult = ReturnType<typeof useGetFileUploadQuery>;
+export type GetFileUploadLazyQueryHookResult = ReturnType<typeof useGetFileUploadLazyQuery>;
+export type GetFileUploadSuspenseQueryHookResult = ReturnType<typeof useGetFileUploadSuspenseQuery>;
+export type GetFileUploadQueryResult = Apollo.QueryResult<GetFileUploadQuery, GetFileUploadQueryVariables>;

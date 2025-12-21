@@ -1,0 +1,68 @@
+# Cafe24 상품 목록 (Connection)
+query GetCafe24ProductsConnection(
+  $first: Int
+  $after: String
+  $before: String
+  $last: Int
+  $filter: Cafe24ProductsConnectionFilterInput
+) {
+  cafe24ProductsConnection(
+    first: $first
+    after: $after
+    before: $before
+    last: $last
+    filter: $filter
+  ) {
+    edges {
+      cursor
+      node {
+        productNo
+        productName
+        productCode
+        price
+        retailPrice
+        display
+        selling
+        soldOut
+        createdAt
+        updatedAt
+        shopNo
+        engProductName
+        summaryDescription
+        detailImageUrl
+        listImageUrl
+        tinyImageUrl
+        smallImageUrl
+      }
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+  }
+}
+
+# Cafe24 상품 단건 조회
+query GetCafe24Product($productNo: Int!) {
+  cafe24Product(productNo: $productNo) {
+    productNo
+    productName
+    productCode
+    price
+    retailPrice
+    display
+    selling
+    soldOut
+    createdAt
+    updatedAt
+    shopNo
+    engProductName
+    summaryDescription
+    detailImageUrl
+    listImageUrl
+    tinyImageUrl
+    smallImageUrl
+  }
+}

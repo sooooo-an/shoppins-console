@@ -3,6 +3,7 @@ import "./globals.css";
 import { ApolloProviderWrapper } from "@/providers/apollo-provider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { AuthProvider } from "@/contexts/authContext";
 
 export const metadata: Metadata = {
   title: "Shoppins Console",
@@ -18,9 +19,11 @@ export default function RootLayout({
     <html lang="ko">
       <body className="antialiased">
         <ApolloProviderWrapper>
-          <Header />
-          {children}
-          <Footer />
+          <AuthProvider>
+            <Header />
+            {children}
+            <Footer />
+          </AuthProvider>
         </ApolloProviderWrapper>
       </body>
     </html>

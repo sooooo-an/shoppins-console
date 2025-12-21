@@ -1,7 +1,6 @@
 "use client";
 
 import { GetCafe24ProductsConnectionQuery } from "@/apollo/generated/apollo-generated-graphql";
-import Image from "next/image";
 import { PinEditorModal } from "./PinEditorModal";
 import { useState } from "react";
 
@@ -11,7 +10,7 @@ interface ProductListProps {
 
 const ProductList = ({ products }: ProductListProps) => {
   const [selectedProduct, setSelectedProduct] = useState<
-    | GetCafe24ProductsConnectionQuery["cafe24ProductsConnection"]["edges"][0]
+    | GetCafe24ProductsConnectionQuery["cafe24ProductsConnection"]["edges"][0]["node"]
     | null
   >(null);
 
@@ -22,17 +21,15 @@ const ProductList = ({ products }: ProductListProps) => {
           {products.map((product) => (
             <button
               key={product.node.productNo}
-              onClick={() => setSelectedProduct(product)}
+              onClick={() => setSelectedProduct(product.node)}
               className="w-full px-6 py-4 hover:bg-gray-50 transition-colors flex items-center gap-4 text-left"
             >
               {/* Product Image */}
               <div className="relative w-16 h-16 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
-                <Image
+                <img
                   src={product.node.listImageUrl || ""}
                   alt={product.node.productName}
                   className="w-full h-full object-cover"
-                  width={100}
-                  height={100}
                 />
                 {/* {product.node.pinsCount > 0 && (
                 <div className="absolute top-1 right-1 bg-pink-400 text-white px-1.5 py-0.5 rounded-full flex items-center gap-0.5 text-xs">
@@ -86,9 +83,9 @@ const ProductList = ({ products }: ProductListProps) => {
           ))}
         </div>
       </div>
-      {selectedProduct && selectedProduct.node.listImageUrl && (
+      {selectedProduct && selectedProduct.listImageUrl && (
         <PinEditorModal
-          imageUrl={selectedProduct.node.listImageUrl}
+          imageUrl={selectedProduct.listImageUrl}
           onClose={() => setSelectedProduct(null)}
         />
       )}

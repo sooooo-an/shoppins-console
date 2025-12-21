@@ -6,8 +6,8 @@ import { useQuery } from "@apollo/client";
 import {
   GetPinsDocument,
   GetPinsQuery,
+  useGetPinsQuery,
 } from "@/apollo/generated/apollo-generated-graphql";
-import Image from "next/image";
 import ModalPortal from "./ModalPortal";
 
 interface PinData {
@@ -42,14 +42,9 @@ export function PinEditorModal({
     activeMode: "click" as "click" | "hover",
   });
 
-  const { data, loading, error, refetch } = useQuery<GetPinsQuery>(
-    GetPinsDocument,
-    {
-      variables: { imageUrl },
-    }
-  );
-
-  console.log(data);
+  const { data, loading, error, refetch } = useGetPinsQuery({
+    variables: { connectingImageUrl: imageUrl },
+  });
 
   const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -158,7 +153,7 @@ export function PinEditorModal({
                     className="relative aspect-square bg-white rounded-xl overflow-hidden cursor-crosshair"
                     onClick={handleImageClick}
                   >
-                    <Image
+                    <img
                       src={imageUrl}
                       alt="Product"
                       className="w-full h-full object-cover"

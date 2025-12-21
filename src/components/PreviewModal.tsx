@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { X, Pin, ExternalLink } from "lucide-react";
-import Image from "next/image";
 
 interface PinData {
   id: string;
@@ -62,12 +61,10 @@ export function PreviewModal({
         {/* Content */}
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-73px)]">
           <div className="relative aspect-square max-w-3xl mx-auto bg-gray-100 rounded-2xl overflow-hidden">
-            <Image
+            <img
               src={imageUrl}
               alt="Preview"
               className="w-full h-full object-cover"
-              width={100}
-              height={100}
             />
 
             {/* Pins */}

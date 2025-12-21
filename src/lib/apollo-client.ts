@@ -39,7 +39,7 @@ const retryLink = new RetryLink({
       const hasAuthError = error.result?.errors?.some(
         (err: unknown) =>
           (err as { extensions?: { code?: string } }).extensions?.code ===
-            "UNAUTHENTICATED" ||
+            "EXPIRED_ACCESS_TOKEN" ||
           (err as { extensions?: { code?: string } }).extensions?.code ===
             "UNAUTHORIZED"
       );

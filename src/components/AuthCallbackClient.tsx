@@ -14,7 +14,7 @@ function AuthCallbackClient({ accessToken, expiresAt }: Props) {
 
   login(accessToken, expiresAt ?? undefined)
     .then(() => {
-      router.replace("/");
+      router.replace("/products");
     })
     .catch(() => {
       router.replace("/auth/signin?message=invalid_auth");

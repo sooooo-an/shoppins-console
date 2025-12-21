@@ -34,7 +34,7 @@ export default function Cafe24SuccessPage() {
 
         await login(accessToken, expiresAt || undefined);
 
-        router.replace("/");
+        router.replace("/products");
       } catch (error) {
         console.error("Auth failed:", error);
         router.push("/auth/signin?message=auth_failed");

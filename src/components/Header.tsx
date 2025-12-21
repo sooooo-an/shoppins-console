@@ -1,3 +1,5 @@
+"use client";
+
 import Logo from "@/components/Logo";
 import Link from "next/link";
 import { useAuth } from "@/contexts/authContext";

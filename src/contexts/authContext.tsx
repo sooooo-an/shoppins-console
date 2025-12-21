@@ -58,7 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error("Logout API failed:", error);
     } finally {
       setAccessToken(null);
-      router.push("/login");
+      router.push("/auth/signin");
     }
   }, [router, setAccessToken]);
 

@@ -34,7 +34,7 @@ const retryLink = new RetryLink({
   },
   attempts: {
     max: 2,
-    retryIf: async (error, operation) => {
+    retryIf: async (error) => {
       // 인증 에러인지 체크
       const hasAuthError = error.result?.errors?.some(
         (err: unknown) =>
@@ -71,7 +71,7 @@ const retryLink = new RetryLink({
         } catch {
           localStorage.removeItem("access_token");
           localStorage.removeItem("token_expires_at");
-          window.location.href = "/login";
+          window.location.href = "/auth/signin";
           return false;
         }
       }
@@ -83,7 +83,26 @@ const retryLink = new RetryLink({
 
 export const apolloClient = new ApolloClient({
   link: from([retryLink, authLink, httpLink]),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          cafe24ProductsConnection: {
+            keyArgs: ["filter"],
+            merge(existing, incoming) {
+              if (!existing) {
+                return incoming;
+              }
+              return {
+                ...incoming,
+                edges: [...existing.edges, ...incoming.edges],
+              };
+            },
+          },
+        },
+      },
+    },
+  }),
 });
 
 export const graphqlRequest = async <T>(

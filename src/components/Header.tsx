@@ -11,7 +11,7 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
         <Logo size="medium" color="black" />
         <nav className="flex items-center gap-4">
-          {isAuthenticated ? (
+          {!isAuthenticated ? (
             <>
               <Link href="/auth/signin">콘솔로 바로가기</Link>
               <Link

@@ -24,8 +24,8 @@ query GetCafe24ProductsConnection(
         display
         selling
         soldOut
-        createdAt
-        updatedAt
+        # createdAt
+        # updatedAt
         shopNo
         engProductName
         summaryDescription

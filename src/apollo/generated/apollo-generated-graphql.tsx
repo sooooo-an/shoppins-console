@@ -326,7 +326,7 @@ export type GetCafe24ProductsConnectionQueryVariables = Exact<{
 }>;
 
 
-export type GetCafe24ProductsConnectionQuery = { __typename?: 'Query', cafe24ProductsConnection: { __typename?: 'Cafe24ProductsConnection', edges: Array<{ __typename?: 'Cafe24ProductsConnectionEdge', cursor: string, node: { __typename?: 'Cafe24Product', productNo: string, productName: string, productCode: string, price: string, retailPrice?: string | null, display: boolean, selling: boolean, soldOut: boolean, createdAt: any, updatedAt: any, shopNo: number, engProductName?: string | null, summaryDescription?: string | null, detailImageUrl?: string | null, listImageUrl?: string | null, tinyImageUrl?: string | null, smallImageUrl?: string | null } }>, pageInfo: { __typename?: 'ConnectionPageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor: string, endCursor: string } } };
+export type GetCafe24ProductsConnectionQuery = { __typename?: 'Query', cafe24ProductsConnection: { __typename?: 'Cafe24ProductsConnection', edges: Array<{ __typename?: 'Cafe24ProductsConnectionEdge', cursor: string, node: { __typename?: 'Cafe24Product', productNo: string, productName: string, productCode: string, price: string, retailPrice?: string | null, display: boolean, selling: boolean, soldOut: boolean, shopNo: number, engProductName?: string | null, summaryDescription?: string | null, detailImageUrl?: string | null, listImageUrl?: string | null, tinyImageUrl?: string | null, smallImageUrl?: string | null } }>, pageInfo: { __typename?: 'ConnectionPageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor: string, endCursor: string } } };
 
 export type GetCafe24ProductQueryVariables = Exact<{
   productNo: Scalars['Int']['input'];
@@ -544,8 +544,6 @@ export const GetCafe24ProductsConnectionDocument = gql`
         display
         selling
         soldOut
-        createdAt
-        updatedAt
         shopNo
         engProductName
         summaryDescription

@@ -1,21 +1,11 @@
 import { useState } from "react";
 import { X, Pin, ExternalLink } from "lucide-react";
-
-interface PinData {
-  id: string;
-  x: number;
-  y: number;
-  type: "comment" | "product";
-  content: {
-    comment?: string;
-    productName?: string;
-    productUrl?: string;
-  };
-}
+import { Pin as PinType } from "@/apollo/generated/apollo-generated-graphql";
+import ModalPortal from "./ModalPortal";
 
 interface PreviewModalProps {
   imageUrl: string;
-  pins: PinData[];
+  pins: PinType[];
   settings: {
     color: string;
     size: "small" | "medium" | "large";
@@ -32,12 +22,6 @@ export function PreviewModal({
 }: PreviewModalProps) {
   const [activePin, setActivePin] = useState<string | null>(null);
 
-  const pinSizeMap = {
-    small: "w-4 h-4 p-1.5",
-    medium: "w-5 h-5 p-2",
-    large: "w-6 h-6 p-2.5",
-  };
-
   const handlePinInteraction = (pinId: string) => {
     if (settings.activeMode === "click") {
       setActivePin(activePin === pinId ? null : pinId);
@@ -45,7 +29,7 @@ export function PreviewModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+    <ModalPortal onClose={onClose} zIndex={9999}>
       <div className="bg-white rounded-3xl max-w-5xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
         {/* Header */}
         <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
@@ -85,8 +69,8 @@ export function PreviewModal({
                   }}
                   className="absolute group"
                   style={{
-                    left: `${pin.x}%`,
-                    top: `${pin.y}%`,
+                    left: `${pin.xRatio * 100}%`, // 0-1을 0-100%로 변환
+                    top: `${pin.yRatio * 100}%`, // 0-1을 0-100%로 변환
                     transform: "translate(-50%, -50%)",
                   }}
                 >
@@ -94,7 +78,9 @@ export function PreviewModal({
                     {activePin === pin.id && (
                       <div
                         className="absolute inset-0 rounded-full animate-ping opacity-75"
-                        style={{ backgroundColor: settings.color }}
+                        style={{
+                          backgroundColor: pin.color || settings.color,
+                        }}
                       />
                     )}
                     <div
@@ -102,8 +88,16 @@ export function PreviewModal({
                         activePin === pin.id
                           ? "scale-110"
                           : "group-hover:scale-110"
-                      } ${pinSizeMap[settings.size]}`}
-                      style={{ backgroundColor: settings.color }}
+                      } ${
+                        pin.size === 1
+                          ? "w-4 h-4 p-1.5"
+                          : pin.size === 2
+                          ? "w-5 h-5 p-2"
+                          : "w-6 h-6 p-2.5"
+                      }`}
+                      style={{
+                        backgroundColor: pin.color || settings.color,
+                      }}
                     >
                       <Pin className="text-white" fill="currentColor" />
                     </div>
@@ -115,10 +109,10 @@ export function PreviewModal({
                   <div
                     className="absolute z-10 animate-in fade-in zoom-in duration-200"
                     style={{
-                      left: `${pin.x}%`,
-                      top: `${pin.y}%`,
+                      left: `${pin.xRatio * 100}%`, // 0-1을 0-100%로 변환
+                      top: `${pin.yRatio * 100}%`, // 0-1을 0-100%로 변환
                       transform:
-                        pin.y > 50
+                        pin.yRatio > 0.5
                           ? "translate(-50%, calc(-100% - 50px))"
                           : "translate(-50%, 50px)",
                     }}
@@ -126,30 +120,35 @@ export function PreviewModal({
                     <div
                       className="rounded-2xl p-4 shadow-xl min-w-[250px] border-2"
                       style={{
-                        backgroundColor: `${settings.color}20`,
-                        borderColor: settings.color,
+                        backgroundColor: `${pin.color || settings.color}20`,
+                        borderColor: pin.color || settings.color,
                       }}
                     >
-                      {pin.type === "comment" ? (
-                        <p className="text-gray-900 text-sm">
-                          {pin.content.comment}
-                        </p>
+                      {pin.comment ? (
+                        <p className="text-gray-900 text-sm">{pin.comment}</p>
                       ) : (
                         <div>
-                          <div className="text-gray-900 mb-2">
-                            {pin.content.productName || "상품명"}
-                          </div>
-                          {pin.content.productUrl && (
+                          {pin.title && (
+                            <div className="text-gray-900 mb-2">
+                              {pin.title}
+                            </div>
+                          )}
+                          {pin.linkUrl && (
                             <a
-                              href={pin.content.productUrl}
+                              href={pin.linkUrl}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1 text-sm hover:underline"
-                              style={{ color: settings.color }}
+                              style={{ color: pin.color || settings.color }}
                             >
                               상세보기
                               <ExternalLink className="w-3 h-3" />
                             </a>
+                          )}
+                          {!pin.title && !pin.linkUrl && (
+                            <p className="text-gray-500 text-sm">
+                              내용이 없습니다
+                            </p>
                           )}
                         </div>
                       )}
@@ -160,18 +159,22 @@ export function PreviewModal({
                       className="absolute left-1/2 w-0 h-0"
                       style={{
                         transform: "translateX(-50%)",
-                        ...(pin.y > 50
+                        ...(pin.yRatio > 0.5
                           ? {
                               bottom: "-10px",
                               borderLeft: "10px solid transparent",
                               borderRight: "10px solid transparent",
-                              borderTop: `10px solid ${settings.color}`,
+                              borderTop: `10px solid ${
+                                pin.color || settings.color
+                              }`,
                             }
                           : {
                               top: "-10px",
                               borderLeft: "10px solid transparent",
                               borderRight: "10px solid transparent",
-                              borderBottom: `10px solid ${settings.color}`,
+                              borderBottom: `10px solid ${
+                                pin.color || settings.color
+                              }`,
                             }),
                       }}
                     />
@@ -191,6 +194,6 @@ export function PreviewModal({
           </div>
         </div>
       </div>
-    </div>
+    </ModalPortal>
   );
 }

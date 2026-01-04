@@ -14,6 +14,12 @@ const ProductList = ({ products }: ProductListProps) => {
     | null
   >(null);
 
+  const onSelected = (
+    product: GetCafe24ProductsConnectionQuery["cafe24ProductsConnection"]["edges"][0]["node"]
+  ) => {
+    setSelectedProduct(product);
+  };
+
   return (
     <>
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
@@ -21,7 +27,7 @@ const ProductList = ({ products }: ProductListProps) => {
           {products.map((product) => (
             <button
               key={product.node.productNo}
-              onClick={() => setSelectedProduct(product.node)}
+              onClick={() => onSelected(product.node)}
               className="w-full px-6 py-4 hover:bg-gray-50 transition-colors flex items-center gap-4 text-left"
             >
               {/* Product Image */}

@@ -2,25 +2,13 @@ import { useState } from "react";
 import { X, Plus, Pin, Eye, Trash2, Save, Loader2 } from "lucide-react";
 import { PinSettings } from "./PinSettings";
 import { PreviewModal } from "./PreviewModal";
-import { useQuery } from "@apollo/client";
 import {
-  GetPinsDocument,
-  GetPinsQuery,
   useGetPinsQuery,
+  useUpsertPinsMutation,
+  Pin as PinType,
+  PinType as PinTypeEnum,
 } from "@/apollo/generated/apollo-generated-graphql";
 import ModalPortal from "./ModalPortal";
-
-interface PinData {
-  id: string;
-  x: number;
-  y: number;
-  type: "comment" | "product";
-  content: {
-    comment?: string;
-    productName?: string;
-    productUrl?: string;
-  };
-}
 
 interface PinEditorModalProps {
   imageUrl: string;
@@ -33,7 +21,7 @@ export function PinEditorModal({
   onClose,
   onSave,
 }: PinEditorModalProps) {
-  const [pins, setPins] = useState<PinData[]>([]);
+  const [pins, setPins] = useState<PinType[]>([]);
   const [selectedPin, setSelectedPin] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [pinSettings, setPinSettings] = useState({
@@ -42,26 +30,54 @@ export function PinEditorModal({
     activeMode: "click" as "click" | "hover",
   });
 
-  const { data, loading, error, refetch } = useGetPinsQuery({
-    variables: { connectingImageUrl: imageUrl },
+  useGetPinsQuery({
+    variables: {
+      connectingImageUrl: imageUrl,
+    },
+    onCompleted: (data) => {
+      setPins(data.pins);
+    },
   });
+
+  const [upsertPinsMutation, { loading: saving }] = useUpsertPinsMutation();
 
   const handleImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    const xRatio = (e.clientX - rect.left) / rect.width; // 0-1 사이 값
+    const yRatio = (e.clientY - rect.top) / rect.height; // 0-1 사이 값
 
-    const newPin: PinData = {
+    const newPin: Partial<PinType> & {
+      id: string;
+      xRatio: number;
+      yRatio: number;
+      type: PinTypeEnum;
+      color: string;
+      size: number;
+      connectingImageUrl: string;
+      mallId: string;
+      createdAt: Date;
+      updatedAt: Date;
+    } = {
+      __typename: "Pin",
       id: Date.now().toString(),
-      x,
-      y,
-      type: "comment",
-      content: {
-        comment: "여기에 설명을 입력하세요",
-      },
+      xRatio,
+      yRatio,
+      type: PinTypeEnum.Basic,
+      color: pinSettings.color,
+      size:
+        pinSettings.size === "small"
+          ? 1
+          : pinSettings.size === "medium"
+          ? 2
+          : 3,
+      comment: "여기에 설명을 입력하세요",
+      connectingImageUrl: imageUrl,
+      mallId: "", // TODO: 실제 mallId 가져오기
+      createdAt: new Date() as unknown as PinType["createdAt"],
+      updatedAt: new Date() as unknown as PinType["updatedAt"],
     };
 
-    setPins([...pins, newPin]);
+    setPins([...pins, newPin as PinType]);
     setSelectedPin(newPin.id);
   };
 
@@ -72,34 +88,35 @@ export function PinEditorModal({
     }
   };
 
-  const handleUpdatePin = (id: string, updates: Partial<PinData>) => {
+  const handleUpdatePin = (id: string, updates: Partial<PinType>) => {
     setPins(pins.map((pin) => (pin.id === id ? { ...pin, ...updates } : pin)));
   };
 
-  const handleSave = () => {
-    // Save logic here (mutation 호출 등)
-    onSave?.();
+  const handleSave = async () => {
+    try {
+      await upsertPinsMutation({
+        variables: {
+          input: {
+            connectingImageUrl: imageUrl,
+            pins: pins.map((pin) => ({
+              xRatio: pin.xRatio,
+              yRatio: pin.yRatio,
+              comment: pin.comment,
+              linkUrl: pin.linkUrl,
+              title: pin.title,
+              type: pin.type,
+            })),
+            productNo: 0,
+          },
+        },
+      });
+      onSave?.();
+    } catch (error) {
+      console.error("Failed to save pins:", error);
+    }
   };
 
   const selectedPinData = pins.find((pin) => pin.id === selectedPin);
-
-  const pinSizeMap = {
-    small: "w-4 h-4 p-1.5",
-    medium: "w-5 h-5 p-2",
-    large: "w-6 h-6 p-2.5",
-  };
-
-  // 로딩 중일 때
-  if (loading) {
-    return (
-      <div className="bg-white rounded-3xl max-w-7xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex items-center justify-center p-12">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-teal-600 mx-auto mb-3" />
-          <p className="text-gray-600">핀 데이터를 불러오는 중...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -109,7 +126,7 @@ export function PinEditorModal({
           onClick={(e) => e.stopPropagation()} // 모달 내부 클릭 시 닫히지 않도록
         >
           {/* Header */}
-          <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0">
+          <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-3">
               <h2 className="text-gray-900">핀 에디터</h2>
               <p className="text-sm text-gray-600">
@@ -127,9 +144,14 @@ export function PinEditorModal({
               </button>
               <button
                 onClick={handleSave}
-                className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl transition-colors flex items-center gap-2"
+                disabled={saving}
+                className="px-4 py-2 bg-teal-600 hover:bg-teal-700 disabled:bg-teal-400 disabled:cursor-not-allowed text-white rounded-xl transition-colors flex items-center gap-2"
               >
-                <Save className="w-4 h-4" />
+                {saving ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Save className="w-4 h-4" />
+                )}
                 저장
               </button>
               <button
@@ -169,8 +191,8 @@ export function PinEditorModal({
                         }}
                         className="absolute group"
                         style={{
-                          left: `${pin.x}%`,
-                          top: `${pin.y}%`,
+                          left: `${pin.xRatio * 100}%`, // 0-1을 0-100%로 변환
+                          top: `${pin.yRatio * 100}%`, // 0-1을 0-100%로 변환
                           transform: "translate(-50%, -50%)",
                         }}
                       >
@@ -183,8 +205,16 @@ export function PinEditorModal({
                               selectedPin === pin.id
                                 ? "scale-110"
                                 : "group-hover:scale-110"
-                            } ${pinSizeMap[pinSettings.size]}`}
-                            style={{ backgroundColor: pinSettings.color }}
+                            } ${
+                              pin.size === 1
+                                ? "w-4 h-4 p-1.5"
+                                : pin.size === 2
+                                ? "w-5 h-5 p-2"
+                                : "w-6 h-6 p-2.5"
+                            }`}
+                            style={{
+                              backgroundColor: pin.color || pinSettings.color,
+                            }}
                           >
                             <Pin className="text-white" fill="currentColor" />
                           </div>
@@ -214,105 +244,59 @@ export function PinEditorModal({
                       </button>
                     </div>
 
-                    {/* Pin Type */}
+                    {/* Comment */}
                     <div className="mb-4">
                       <label className="block text-sm text-gray-700 mb-2">
-                        핀 유형
+                        코멘트
                       </label>
-                      <div className="grid grid-cols-2 gap-2">
-                        <button
-                          onClick={() =>
-                            handleUpdatePin(selectedPinData.id, {
-                              type: "comment",
-                              content: { comment: "여기에 설명을 입력하세요" },
-                            })
-                          }
-                          className={`py-2 px-3 rounded-lg text-sm transition-colors ${
-                            selectedPinData.type === "comment"
-                              ? "bg-teal-600 text-white"
-                              : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
-                          }`}
-                        >
-                          코멘트
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleUpdatePin(selectedPinData.id, {
-                              type: "product",
-                              content: { productName: "", productUrl: "" },
-                            })
-                          }
-                          className={`py-2 px-3 rounded-lg text-sm transition-colors ${
-                            selectedPinData.type === "product"
-                              ? "bg-teal-600 text-white"
-                              : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
-                          }`}
-                        >
-                          연관 상품
-                        </button>
-                      </div>
+                      <textarea
+                        value={selectedPinData.comment || ""}
+                        onChange={(e) =>
+                          handleUpdatePin(selectedPinData.id, {
+                            comment: e.target.value,
+                          })
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
+                        rows={4}
+                        placeholder="핀에 대한 설명을 입력하세요"
+                      />
                     </div>
 
-                    {/* Content */}
-                    {selectedPinData.type === "comment" ? (
-                      <div>
-                        <label className="block text-sm text-gray-700 mb-2">
-                          코멘트
-                        </label>
-                        <textarea
-                          value={selectedPinData.content.comment || ""}
-                          onChange={(e) =>
-                            handleUpdatePin(selectedPinData.id, {
-                              content: { comment: e.target.value },
-                            })
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
-                          rows={4}
-                          placeholder="핀에 대한 설명을 입력하세요"
-                        />
-                      </div>
-                    ) : (
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-2">
-                            상품명
-                          </label>
-                          <input
-                            type="text"
-                            value={selectedPinData.content.productName || ""}
-                            onChange={(e) =>
-                              handleUpdatePin(selectedPinData.id, {
-                                content: {
-                                  ...selectedPinData.content,
-                                  productName: e.target.value,
-                                },
-                              })
-                            }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
-                            placeholder="연관 상품명"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-gray-700 mb-2">
-                            상품 URL
-                          </label>
-                          <input
-                            type="url"
-                            value={selectedPinData.content.productUrl || ""}
-                            onChange={(e) =>
-                              handleUpdatePin(selectedPinData.id, {
-                                content: {
-                                  ...selectedPinData.content,
-                                  productUrl: e.target.value,
-                                },
-                              })
-                            }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
-                            placeholder="https://..."
-                          />
-                        </div>
-                      </div>
-                    )}
+                    {/* Title */}
+                    <div className="mb-4">
+                      <label className="block text-sm text-gray-700 mb-2">
+                        제목
+                      </label>
+                      <input
+                        type="text"
+                        value={selectedPinData.title || ""}
+                        onChange={(e) =>
+                          handleUpdatePin(selectedPinData.id, {
+                            title: e.target.value,
+                          })
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
+                        placeholder="핀 제목"
+                      />
+                    </div>
+
+                    {/* Link URL */}
+                    <div className="mb-4">
+                      <label className="block text-sm text-gray-700 mb-2">
+                        링크 URL
+                      </label>
+                      <input
+                        type="url"
+                        value={selectedPinData.linkUrl || ""}
+                        onChange={(e) =>
+                          handleUpdatePin(selectedPinData.id, {
+                            linkUrl: e.target.value,
+                          })
+                        }
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
+                        placeholder="https://..."
+                      />
+                    </div>
                   </div>
                 ) : (
                   <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200 text-center">

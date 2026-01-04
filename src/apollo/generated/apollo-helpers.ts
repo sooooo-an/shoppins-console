@@ -1,11 +1,12 @@
 import { FieldPolicy, FieldReadFunction, TypePolicies, TypePolicy } from '@apollo/client/cache';
-export type Cafe24ProductKeySpecifier = ('createdAt' | 'detailImageUrl' | 'display' | 'engProductName' | 'listImageUrl' | 'price' | 'productCode' | 'productName' | 'productNo' | 'retailPrice' | 'selling' | 'shopNo' | 'smallImageUrl' | 'soldOut' | 'summaryDescription' | 'tinyImageUrl' | 'updatedAt' | Cafe24ProductKeySpecifier)[];
+export type Cafe24ProductKeySpecifier = ('createdAt' | 'detailImageUrl' | 'display' | 'engProductName' | 'listImageUrl' | 'pinsCount' | 'price' | 'productCode' | 'productName' | 'productNo' | 'retailPrice' | 'selling' | 'shopNo' | 'smallImageUrl' | 'soldOut' | 'summaryDescription' | 'tinyImageUrl' | 'updatedAt' | Cafe24ProductKeySpecifier)[];
 export type Cafe24ProductFieldPolicy = {
 	createdAt?: FieldPolicy<any> | FieldReadFunction<any>,
 	detailImageUrl?: FieldPolicy<any> | FieldReadFunction<any>,
 	display?: FieldPolicy<any> | FieldReadFunction<any>,
 	engProductName?: FieldPolicy<any> | FieldReadFunction<any>,
 	listImageUrl?: FieldPolicy<any> | FieldReadFunction<any>,
+	pinsCount?: FieldPolicy<any> | FieldReadFunction<any>,
 	price?: FieldPolicy<any> | FieldReadFunction<any>,
 	productCode?: FieldPolicy<any> | FieldReadFunction<any>,
 	productName?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -42,13 +43,14 @@ export type LoginSuccessFieldPolicy = {
 	expiresAt?: FieldPolicy<any> | FieldReadFunction<any>,
 	refreshToken?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type MutationKeySpecifier = ('createPin' | 'deletePin' | 'logout' | 'refreshAccessToken' | 'updatePin' | MutationKeySpecifier)[];
+export type MutationKeySpecifier = ('createPin' | 'deletePin' | 'logout' | 'refreshAccessToken' | 'updatePin' | 'upsertPins' | MutationKeySpecifier)[];
 export type MutationFieldPolicy = {
 	createPin?: FieldPolicy<any> | FieldReadFunction<any>,
 	deletePin?: FieldPolicy<any> | FieldReadFunction<any>,
 	logout?: FieldPolicy<any> | FieldReadFunction<any>,
 	refreshAccessToken?: FieldPolicy<any> | FieldReadFunction<any>,
-	updatePin?: FieldPolicy<any> | FieldReadFunction<any>
+	updatePin?: FieldPolicy<any> | FieldReadFunction<any>,
+	upsertPins?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type PinKeySpecifier = ('color' | 'comment' | 'connectingImageUrl' | 'createdAt' | 'displayImageUrl' | 'id' | 'linkUrl' | 'mallId' | 'productNo' | 'size' | 'title' | 'type' | 'updatedAt' | 'xRatio' | 'yRatio' | PinKeySpecifier)[];
 export type PinFieldPolicy = {

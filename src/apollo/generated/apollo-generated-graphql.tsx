@@ -30,6 +30,8 @@ export type Cafe24Product = {
   /** 영문 상품명 */
   engProductName?: Maybe<Scalars['String']['output']>;
   listImageUrl?: Maybe<Scalars['String']['output']>;
+  /** 해당 Cafe24 상품에 연결된 핀 개수 */
+  pinsCount: Scalars['Float']['output'];
   /** 판매가 */
   price: Scalars['String']['output'];
   /** 상품 코드 */
@@ -87,7 +89,7 @@ export type CreatePinInput = {
   connectingImageUrl: Scalars['String']['input'];
   displayImageUrl?: InputMaybe<Scalars['String']['input']>;
   linkUrl?: InputMaybe<Scalars['String']['input']>;
-  productNo?: InputMaybe<Scalars['String']['input']>;
+  productNo?: InputMaybe<Scalars['Int']['input']>;
   size?: InputMaybe<Scalars['Int']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<PinType>;
@@ -157,6 +159,8 @@ export type Mutation = {
   refreshAccessToken: LoginSuccess;
   /** 핀 수정 */
   updatePin: Pin;
+  /** 이미지 기준으로 핀 목록을 전체 덮어쓰기(upsert) 합니다. */
+  upsertPins: Array<Pin>;
 };
 
 
@@ -184,6 +188,11 @@ export type MutationUpdatePinArgs = {
   input: UpdatePinInput;
 };
 
+
+export type MutationUpsertPinsArgs = {
+  input: UpsertPinsGraphQlInput;
+};
+
 export type Pin = {
   __typename?: 'Pin';
   color: Scalars['String']['output'];
@@ -194,7 +203,7 @@ export type Pin = {
   id: Scalars['ID']['output'];
   linkUrl?: Maybe<Scalars['String']['output']>;
   mallId: Scalars['String']['output'];
-  productNo?: Maybe<Scalars['String']['output']>;
+  productNo?: Maybe<Scalars['Int']['output']>;
   size: Scalars['Int']['output'];
   title?: Maybe<Scalars['String']['output']>;
   type: PinType;
@@ -276,6 +285,29 @@ export type Upload = {
   uploadUrl: Scalars['String']['output'];
 };
 
+export type UpsertPinItemInput = {
+  color?: InputMaybe<Scalars['String']['input']>;
+  comment?: InputMaybe<Scalars['String']['input']>;
+  displayImageUrl?: InputMaybe<Scalars['String']['input']>;
+  linkUrl?: InputMaybe<Scalars['String']['input']>;
+  size?: InputMaybe<Scalars['Int']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<PinType>;
+  /** x 좌표 비율 (0~1) */
+  xRatio: Scalars['Float']['input'];
+  /** y 좌표 비율 (0~1) */
+  yRatio: Scalars['Float']['input'];
+};
+
+export type UpsertPinsGraphQlInput = {
+  /** 핀을 연결할 이미지 URL (기준 키) */
+  connectingImageUrl: Scalars['String']['input'];
+  /** 해당 이미지에 저장할 핀 목록 (전체 덮어쓰기) */
+  pins: Array<UpsertPinItemInput>;
+  /** Cafe24 상품 번호 */
+  productNo: Scalars['Int']['input'];
+};
+
 /** 사용자 (Cafe24 mall 기준) */
 export type User = {
   __typename?: 'User';
@@ -335,26 +367,28 @@ export type GetCafe24ProductQueryVariables = Exact<{
 
 export type GetCafe24ProductQuery = { __typename?: 'Query', cafe24Product?: { __typename?: 'Cafe24Product', productNo: string, productName: string, productCode: string, price: string, retailPrice?: string | null, display: boolean, selling: boolean, soldOut: boolean, createdAt: any, updatedAt: any, shopNo: number, engProductName?: string | null, summaryDescription?: string | null, detailImageUrl?: string | null, listImageUrl?: string | null, tinyImageUrl?: string | null, smallImageUrl?: string | null } | null };
 
+export type PinFieldsFragment = { __typename?: 'Pin', id: string, color: string, comment?: string | null, connectingImageUrl: string, createdAt: any, displayImageUrl?: string | null, linkUrl?: string | null, mallId: string, productNo?: number | null, size: number, title?: string | null, type: PinType, updatedAt: any, xRatio: number, yRatio: number };
+
 export type GetPinsQueryVariables = Exact<{
   connectingImageUrl: Scalars['String']['input'];
 }>;
 
 
-export type GetPinsQuery = { __typename?: 'Query', pins: Array<{ __typename?: 'Pin', id: string, color: string, comment?: string | null, connectingImageUrl: string, createdAt: any, displayImageUrl?: string | null, linkUrl?: string | null, mallId: string, productNo?: string | null, size: number, title?: string | null, type: PinType, updatedAt: any, xRatio: number, yRatio: number }> };
+export type GetPinsQuery = { __typename?: 'Query', pins: Array<{ __typename?: 'Pin', id: string, color: string, comment?: string | null, connectingImageUrl: string, createdAt: any, displayImageUrl?: string | null, linkUrl?: string | null, mallId: string, productNo?: number | null, size: number, title?: string | null, type: PinType, updatedAt: any, xRatio: number, yRatio: number }> };
 
 export type CreatePinMutationVariables = Exact<{
   input: CreatePinInput;
 }>;
 
 
-export type CreatePinMutation = { __typename?: 'Mutation', createPin: { __typename?: 'Pin', id: string, color: string, comment?: string | null, connectingImageUrl: string, createdAt: any, displayImageUrl?: string | null, linkUrl?: string | null, mallId: string, productNo?: string | null, size: number, title?: string | null, type: PinType, updatedAt: any, xRatio: number, yRatio: number } };
+export type CreatePinMutation = { __typename?: 'Mutation', createPin: { __typename?: 'Pin', id: string, color: string, comment?: string | null, connectingImageUrl: string, createdAt: any, displayImageUrl?: string | null, linkUrl?: string | null, mallId: string, productNo?: number | null, size: number, title?: string | null, type: PinType, updatedAt: any, xRatio: number, yRatio: number } };
 
 export type UpdatePinMutationVariables = Exact<{
   input: UpdatePinInput;
 }>;
 
 
-export type UpdatePinMutation = { __typename?: 'Mutation', updatePin: { __typename?: 'Pin', id: string, color: string, comment?: string | null, connectingImageUrl: string, createdAt: any, displayImageUrl?: string | null, linkUrl?: string | null, mallId: string, productNo?: string | null, size: number, title?: string | null, type: PinType, updatedAt: any, xRatio: number, yRatio: number } };
+export type UpdatePinMutation = { __typename?: 'Mutation', updatePin: { __typename?: 'Pin', id: string, color: string, comment?: string | null, connectingImageUrl: string, createdAt: any, displayImageUrl?: string | null, linkUrl?: string | null, mallId: string, productNo?: number | null, size: number, title?: string | null, type: PinType, updatedAt: any, xRatio: number, yRatio: number } };
 
 export type DeletePinMutationVariables = Exact<{
   pinId: Scalars['ID']['input'];
@@ -363,6 +397,13 @@ export type DeletePinMutationVariables = Exact<{
 
 export type DeletePinMutation = { __typename?: 'Mutation', deletePin: boolean };
 
+export type UpsertPinsMutationVariables = Exact<{
+  input: UpsertPinsGraphQlInput;
+}>;
+
+
+export type UpsertPinsMutation = { __typename?: 'Mutation', upsertPins: Array<{ __typename?: 'Pin', id: string, color: string, comment?: string | null, connectingImageUrl: string, createdAt: any, displayImageUrl?: string | null, linkUrl?: string | null, mallId: string, productNo?: number | null, size: number, title?: string | null, type: PinType, updatedAt: any, xRatio: number, yRatio: number }> };
+
 export type GetFileUploadQueryVariables = Exact<{
   data: FileUploadInput;
 }>;
@@ -370,7 +411,25 @@ export type GetFileUploadQueryVariables = Exact<{
 
 export type GetFileUploadQuery = { __typename?: 'Query', fileUpload: { __typename?: 'Upload', uploadUrl: string, fileUrl: string } };
 
-
+export const PinFieldsFragmentDoc = gql`
+    fragment PinFields on Pin {
+  id
+  color
+  comment
+  connectingImageUrl
+  createdAt
+  displayImageUrl
+  linkUrl
+  mallId
+  productNo
+  size
+  title
+  type
+  updatedAt
+  xRatio
+  yRatio
+}
+    `;
 export const GetCafe24AuthenticationUrlDocument = gql`
     query GetCafe24AuthenticationUrl($mallId: String!) {
   cafe24AuthenticationUrl(mallId: $mallId)
@@ -664,24 +723,10 @@ export type GetCafe24ProductQueryResult = Apollo.QueryResult<GetCafe24ProductQue
 export const GetPinsDocument = gql`
     query GetPins($connectingImageUrl: String!) {
   pins(connectingImageUrl: $connectingImageUrl) {
-    id
-    color
-    comment
-    connectingImageUrl
-    createdAt
-    displayImageUrl
-    linkUrl
-    mallId
-    productNo
-    size
-    title
-    type
-    updatedAt
-    xRatio
-    yRatio
+    ...PinFields
   }
 }
-    `;
+    ${PinFieldsFragmentDoc}`;
 
 /**
  * __useGetPinsQuery__
@@ -721,24 +766,10 @@ export type GetPinsQueryResult = Apollo.QueryResult<GetPinsQuery, GetPinsQueryVa
 export const CreatePinDocument = gql`
     mutation CreatePin($input: CreatePinInput!) {
   createPin(input: $input) {
-    id
-    color
-    comment
-    connectingImageUrl
-    createdAt
-    displayImageUrl
-    linkUrl
-    mallId
-    productNo
-    size
-    title
-    type
-    updatedAt
-    xRatio
-    yRatio
+    ...PinFields
   }
 }
-    `;
+    ${PinFieldsFragmentDoc}`;
 export type CreatePinMutationFn = Apollo.MutationFunction<CreatePinMutation, CreatePinMutationVariables>;
 
 /**
@@ -768,24 +799,10 @@ export type CreatePinMutationOptions = Apollo.BaseMutationOptions<CreatePinMutat
 export const UpdatePinDocument = gql`
     mutation UpdatePin($input: UpdatePinInput!) {
   updatePin(input: $input) {
-    id
-    color
-    comment
-    connectingImageUrl
-    createdAt
-    displayImageUrl
-    linkUrl
-    mallId
-    productNo
-    size
-    title
-    type
-    updatedAt
-    xRatio
-    yRatio
+    ...PinFields
   }
 }
-    `;
+    ${PinFieldsFragmentDoc}`;
 export type UpdatePinMutationFn = Apollo.MutationFunction<UpdatePinMutation, UpdatePinMutationVariables>;
 
 /**
@@ -843,6 +860,39 @@ export function useDeletePinMutation(baseOptions?: Apollo.MutationHookOptions<De
 export type DeletePinMutationHookResult = ReturnType<typeof useDeletePinMutation>;
 export type DeletePinMutationResult = Apollo.MutationResult<DeletePinMutation>;
 export type DeletePinMutationOptions = Apollo.BaseMutationOptions<DeletePinMutation, DeletePinMutationVariables>;
+export const UpsertPinsDocument = gql`
+    mutation UpsertPins($input: UpsertPinsGraphQLInput!) {
+  upsertPins(input: $input) {
+    ...PinFields
+  }
+}
+    ${PinFieldsFragmentDoc}`;
+export type UpsertPinsMutationFn = Apollo.MutationFunction<UpsertPinsMutation, UpsertPinsMutationVariables>;
+
+/**
+ * __useUpsertPinsMutation__
+ *
+ * To run a mutation, you first call `useUpsertPinsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertPinsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertPinsMutation, { data, loading, error }] = useUpsertPinsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpsertPinsMutation(baseOptions?: Apollo.MutationHookOptions<UpsertPinsMutation, UpsertPinsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpsertPinsMutation, UpsertPinsMutationVariables>(UpsertPinsDocument, options);
+      }
+export type UpsertPinsMutationHookResult = ReturnType<typeof useUpsertPinsMutation>;
+export type UpsertPinsMutationResult = Apollo.MutationResult<UpsertPinsMutation>;
+export type UpsertPinsMutationOptions = Apollo.BaseMutationOptions<UpsertPinsMutation, UpsertPinsMutationVariables>;
 export const GetFileUploadDocument = gql`
     query GetFileUpload($data: FileUploadInput!) {
   fileUpload(data: $data) {

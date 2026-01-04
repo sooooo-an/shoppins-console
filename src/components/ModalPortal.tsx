@@ -6,9 +6,10 @@ import { createPortal } from "react-dom";
 type Props = {
   children: React.ReactNode;
   onClose: () => void;
+  zIndex?: number;
 };
 
-function ModalPortal({ children, onClose }: Props) {
+function ModalPortal({ children, onClose, zIndex = 50 }: Props) {
   useEffect(() => {
     // Prevent body scroll when portal is mounted
     const originalOverflow = document.body.style.overflow;
@@ -34,7 +35,10 @@ function ModalPortal({ children, onClose }: Props) {
   if (typeof window === "undefined") return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div
+      className="fixed inset-0 flex items-center justify-center"
+      style={{ zIndex }}
+    >
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"

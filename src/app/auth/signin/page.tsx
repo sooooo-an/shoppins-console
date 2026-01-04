@@ -1,12 +1,12 @@
 import Signin from "@/components/Signin";
 import { Suspense } from "react";
 
-const SigninPage = ({
+const SigninPage = async ({
   searchParams,
 }: {
-  searchParams: { message?: string };
+  searchParams: Promise<{ message?: string }>;
 }) => {
-  const { message } = searchParams;
+  const { message } = await searchParams;
   return (
     <Suspense>
       <Signin message={message} />

@@ -6,6 +6,7 @@ import { useGetCafe24ProductsConnectionQuery } from "@/apollo/generated/apollo-g
 import type { Cafe24ProductsConnectionFilterInput } from "@/apollo/generated/apollo-generated-graphql";
 import { NetworkStatus } from "@apollo/client";
 import ProductList from "@/components/ProductList";
+import Cafe24ScriptBanner from "@/components/Cafe24ScriptBanner";
 
 const ProductsPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -81,6 +82,7 @@ const ProductsPage = () => {
 
   return (
     <section className="p-6">
+      <Cafe24ScriptBanner />
       <div className="container mx-auto">
         <section className="mb-6">
           <h3 className="text-2xl font-bold mb-4">상품 관리</h3>

@@ -2154,6 +2154,18 @@
             "deprecationReason": null
           },
           {
+            "name": "mallId",
+            "description": "몰 ID",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "updatedAt",
             "description": "수정일",
             "args": [],

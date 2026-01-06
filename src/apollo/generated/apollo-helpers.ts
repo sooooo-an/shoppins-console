@@ -84,12 +84,13 @@ export type UploadFieldPolicy = {
 	fileUrl?: FieldPolicy<any> | FieldReadFunction<any>,
 	uploadUrl?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type UserKeySpecifier = ('createdAt' | 'deletedAt' | 'id' | 'lastLogin' | 'updatedAt' | UserKeySpecifier)[];
+export type UserKeySpecifier = ('createdAt' | 'deletedAt' | 'id' | 'lastLogin' | 'mallId' | 'updatedAt' | UserKeySpecifier)[];
 export type UserFieldPolicy = {
 	createdAt?: FieldPolicy<any> | FieldReadFunction<any>,
 	deletedAt?: FieldPolicy<any> | FieldReadFunction<any>,
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	lastLogin?: FieldPolicy<any> | FieldReadFunction<any>,
+	mallId?: FieldPolicy<any> | FieldReadFunction<any>,
 	updatedAt?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type StrictTypedTypePolicies = {

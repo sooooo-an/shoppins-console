@@ -319,6 +319,8 @@ export type User = {
   id: Scalars['ID']['output'];
   /** 마지막 로그인 시각 */
   lastLogin?: Maybe<Scalars['DateTime']['output']>;
+  /** 몰 ID */
+  mallId?: Maybe<Scalars['String']['output']>;
   /** 수정일 */
   updatedAt: Scalars['DateTime']['output'];
 };
@@ -347,7 +349,7 @@ export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetMeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, createdAt: any, deletedAt?: any | null, lastLogin?: any | null, updatedAt: any } };
+export type GetMeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, createdAt: any, deletedAt?: any | null, lastLogin?: any | null, updatedAt: any, mallId?: string | null } };
 
 export type GetCafe24ProductsConnectionQueryVariables = Exact<{
   first?: InputMaybe<Scalars['Int']['input']>;
@@ -545,6 +547,7 @@ export const GetMeDocument = gql`
     deletedAt
     lastLogin
     updatedAt
+    mallId
   }
 }
     `;

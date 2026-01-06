@@ -25,5 +25,6 @@ query GetMe {
     deletedAt
     lastLogin
     updatedAt
+    mallId
   }
 }

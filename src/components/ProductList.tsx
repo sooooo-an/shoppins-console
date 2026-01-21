@@ -91,7 +91,7 @@ const ProductList = ({ products }: ProductListProps) => {
       </div>
       {selectedProduct && selectedProduct.listImageUrl && (
         <PinEditorModal
-          imageUrl={selectedProduct.listImageUrl}
+          imageUrl={selectedProduct.detailImageUrl || selectedProduct.listImageUrl}
           onClose={() => setSelectedProduct(null)}
         />
       )}
